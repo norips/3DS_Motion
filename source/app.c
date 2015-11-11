@@ -208,27 +208,24 @@ void app()
 		{
 			color++;
 		}
+                //Next frame
                 if (input & KEY_R && closePopup == false && clearPopup == false && savePopup == false && errorPopup == false)
                 {
                     if(frame+1>canvassize){
                         canvassize++;
                         if((canvasarray=realloc(canvasarray,sizeof(canvas)*(canvassize+1)))!=NULL){} 
                         else { errorPopup = true; }
-//                        if((canvasarr=realloc(canvasarr,sizeof(canvas)*(canvassize+1)))!=NULL){} 
-//                        else { errorPopup = true; }
-//                        memcpy(&canvasarr[frame],posxy,sizeof(canvas));
                         writeToArray(posxy,&canvasarray[frame]);
                         frame++;
                         variableReset();
                     } else {
-//                        memcpy(&canvasarr[frame],posxy,sizeof(canvas));
                         writeToArray(posxy,&canvasarray[frame]);
                         frame++;
                         variableReset();
                         writeToScreen(posxy,&canvasarray[frame]);
-//                        memcpy(posxy,&canvasarr[frame],sizeof(canvas));
                     }
                 }
+                //Before frame
                 if (input & KEY_L && closePopup == false && clearPopup == false && savePopup == false && errorPopup == false)
                 {
                     writeToArray(posxy,&canvasarray[frame]);
@@ -236,13 +233,13 @@ void app()
                         frame--;
                     variableReset();
                     writeToScreen(posxy,&canvasarray[frame]);
-//                    memcpy(posxy,&canvasarr[frame],sizeof(canvas));
                 }
                 //Enable show last frame
                 if (input & KEY_Y && closePopup == false && clearPopup == false && savePopup == false) 
                 {
                     showLastFrame = !showLastFrame;
                 }
+                //Show animation
                 if (input & KEY_X && closePopup == false && clearPopup == false && savePopup == false) 
                 {
                     frame=0;
@@ -291,10 +288,15 @@ void app()
                 oldposX=posX;
                 oldposY=posY;
 	} else if(mode == 2){
+            //Exit
             if(input & KEY_B){ mode = 1; }
+            //Lower fps
             if(input & KEY_DOWN && framepersecond > 0){framepersecond--;} 
+            //Faster fps
             if(input & KEY_UP && framepersecond < 24){framepersecond++;} 
+            //Start
             if(input & KEY_L ) frame=0;
+            //Export
             if(input & KEY_Y ) saveGIF=1;
                 
         }
