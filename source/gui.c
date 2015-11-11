@@ -5,6 +5,7 @@
 #include "gui.h"
 #include "draw.h"
 #include "rendering.h"
+#include "app.h"
 #define ctablesize 3
 #define posxysize 240
 
@@ -99,8 +100,30 @@ void guiTopMenu()
 	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 265, 240 - fontDefault.height * 6);
 
 }
-
-void guiBottomPaint(int color, int cTable[][ctablesize], int posxy[][posxysize])
+void guiBottomPaintAnimation(int cTable[][ctablesize],canvas* canvasarray,int frame, int fps)
+{
+    //Prints a white screen!
+    char buffer[256];
+    drawFillRect(0, 0, 320, 240, 255, 255, 255, screenBottom);
+    sprintf(buffer,"Frame = %03d",frame);
+    gfxDrawText(GFX_BOTTOM,GFX_LEFT,NULL,buffer,30,245- fontDefault.height*3);
+    sprintf(buffer,"FPS = %03d",fps);
+    gfxDrawText(GFX_BOTTOM,GFX_LEFT,NULL,buffer,30,240- fontDefault.height*5);
+    if(canvasarray!=NULL)
+    {
+        int size=canvasarray->size;
+        for(int i=0;i<size;i++)
+        {
+            drawPixel(  canvasarray->point[i].x,
+                        canvasarray->point[i].y,
+                        cTable[canvasarray->point[i].color][0],
+                        cTable[canvasarray->point[i].color][1],
+                        cTable[canvasarray->point[i].color][2],
+                        screenBottom);
+        }
+    }
+}
+void guiBottomPaint(int color, int cTable[][ctablesize], char posxy[][posxysize],canvas* canvasarray)
 {
 	//Prints a white screen!
 	drawFillRect(0, 0, 320, 240, 255, 255, 255, screenBottom);
@@ -135,11 +158,25 @@ void guiBottomPaint(int color, int cTable[][ctablesize], int posxy[][posxysize])
 	//Print drawing
 	for (guiy = 35; guiy < 240; guiy++)
 	{
-		for (guix = 0; guix < 320; guix++)
-		{
-			drawPixel(guix, guiy, cTable[posxy[guix][guiy]][0], cTable[posxy[guix][guiy]][1], cTable[posxy[guix][guiy]][2], screenBottom);
-		}
+            for (guix = 0; guix < 320; guix++)
+            {
+                drawPixel(guix, guiy, cTable[posxy[guix][guiy]][0], cTable[posxy[guix][guiy]][1], cTable[posxy[guix][guiy]][2], screenBottom);
+            }
 	}
+        if(canvasarray!=NULL && showLastFrame){
+            int size=canvasarray->size;
+            for(int i=0;i<size;i++){
+                //No painting
+                if(posxy[canvasarray->point[i].x][canvasarray->point[i].y]==0){
+                    drawPixel(canvasarray->point[i].x,
+                              canvasarray->point[i].y,
+                              96,  
+                              96,
+                              96,
+                              screenBottom);
+                }
+            }
+        }
 }
 
 void guiBottomMenu()
@@ -214,7 +251,7 @@ void guiPopup(char* title, char* line1, char* line2, char* line3, char* button1,
 	}	
 }
 
-void guiDebug(int mode, int state, int color, int rendered, int sound, int printFPS, int posX, int posY)
+void guiDebug(int mode, int state, int color, int rendered, int sound, int printFPS, int posX, int posY,int frame, int canvassize)
 {
 	//Todo
 	drawFillRect(79, 163, 250, 239, 0, 0, 0, screenTopLeft);
@@ -225,5 +262,7 @@ void guiDebug(int mode, int state, int color, int rendered, int sound, int print
 	sprintf(buffer, "sound = %d                     FPS = %d", sound, printFPS);
 	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 85, 250 - fontDefault.height * 14);
 	sprintf(buffer, "TouchX = %d          Touch = %d", posX, posY);
-	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 85, 240 - fontDefault.height * 15);
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 85, 250 - fontDefault.height * 15);
+        sprintf(buffer, "Frame = %d               Canvas = %d", frame, canvassize);
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 85, 250 - fontDefault.height * 16);
 }

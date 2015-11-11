@@ -12,10 +12,16 @@
 int state = 0;
 int mode = 0;
 int save = 0;
+int saveGIF = 0;
 int rendered = 0; //Performance Improvements
 int sound = 0;
+int framepersecond = 6;
+int frameCount=0;
 u8 batteryLevel = 5;
-
+canvas *canvasarray;
+int frame=0;
+int canvassize=0;
+int sizeCANVAS=0;
 //Popups
 bool exitPopup = false;
 bool clearPopup = false;
@@ -23,12 +29,13 @@ bool savePopup = false;
 bool debugPopup = false;
 bool aboutPopup = false;
 bool closePopup = false;
-
+bool errorPopup = false;
 //Debug mode, ON or OFF:
-bool debug = false;
-
+bool debug = true;
+//Show last frame
+bool showLastFrame = false;
 //Needed to print pixels
-int posxy[320][240];
+char posxy[320][240];
 int x = 0;
 int y = 0;
 
@@ -37,7 +44,7 @@ int printFPS;
 
 // COLOR TABLE (8 colors, 3-->R G B
 int color = 0;
-int cTable[8][3]={
+int cTable[9][3]={
 	{ 255, 255, 255 }, //0 - Eraser/White
 	{ 255, 0, 0 },     //1 - Red
 	{ 255, 128, 0 },   //2 - Orange
@@ -45,8 +52,43 @@ int cTable[8][3]={
 	{ 0, 255, 0 },     //4 - Green
 	{ 51, 255, 255 },  //5 - SkyBlue
 	{ 0, 0, 255 },     //6 - Blue
-	{ 0, 0, 0 }        //7 - Black
+	{ 0, 0, 0 },       //7 - Black
+        { 96, 96, 96 }     //8 - Gray
 };
+
+bool writeToArray(char posxy[320][240],canvas* arrayCanvas){
+    int i=0;
+    arrayCanvas->point=malloc(sizeof(point)*MALLOC_SIZE);
+    if(arrayCanvas->point==NULL){return false;}
+    for (int guiy = 35; guiy < 240; guiy++)
+    {
+        for (int guix = 0; guix < 320; guix++)
+        {
+            if(posxy[guix][guiy]!=0){
+                if(i>=MALLOC_SIZE){
+                    arrayCanvas->point=realloc(arrayCanvas->point,sizeof(point)*(i+1));
+                }
+                arrayCanvas->point[i].x=guix;
+                arrayCanvas->point[i].y=guiy;
+                arrayCanvas->point[i].color=posxy[guix][guiy];
+                i++;
+            }
+
+        }
+    }
+    if(i<MALLOC_SIZE){
+        arrayCanvas->point=realloc(arrayCanvas->point,sizeof(point)*(i+1));
+    }
+    arrayCanvas->size=i;
+    return true;
+}
+
+bool writeToScreen(char screen[320][240],const canvas* arrayCanvas){
+    for (int i = 0; i < arrayCanvas->size; i++){
+        screen[arrayCanvas->point[i].x][arrayCanvas->point[i].y]=arrayCanvas->point[i].color;
+    }
+    return true;
+}
 
 //Variable reset
 void variableReset()
@@ -97,6 +139,7 @@ void app()
 		{
 			if ((((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)) aboutPopup = false; //App about, only close button
 		}
+                
 		else if (debugPopup)
 		{
 			//App debug
@@ -128,8 +171,9 @@ void app()
 		//Saves the drawn dot into the drawing array
 		if ((posX >= 0 && posX <= 320) && (posY >= 34 && posY <= 240) && !closePopup && !clearPopup && !savePopup)
 		{
-			if (oldposX != 0 && oldposY != 0)
+			if (oldposX != 0 && oldposY != 0){
 				smoothDrawing(posxy, posX, posY, oldposX, oldposY, color);
+                        }
 
 			if (color == 0) //Big dot if you are using the eraser
 			{
@@ -164,7 +208,46 @@ void app()
 		{
 			color++;
 		}
-
+                if (input & KEY_R && closePopup == false && clearPopup == false && savePopup == false && errorPopup == false)
+                {
+                    if(frame+1>canvassize){
+                        canvassize++;
+                        if((canvasarray=realloc(canvasarray,sizeof(canvas)*(canvassize+1)))!=NULL){} 
+                        else { errorPopup = true; }
+//                        if((canvasarr=realloc(canvasarr,sizeof(canvas)*(canvassize+1)))!=NULL){} 
+//                        else { errorPopup = true; }
+//                        memcpy(&canvasarr[frame],posxy,sizeof(canvas));
+                        writeToArray(posxy,&canvasarray[frame]);
+                        frame++;
+                        variableReset();
+                    } else {
+//                        memcpy(&canvasarr[frame],posxy,sizeof(canvas));
+                        writeToArray(posxy,&canvasarray[frame]);
+                        frame++;
+                        variableReset();
+                        writeToScreen(posxy,&canvasarray[frame]);
+//                        memcpy(posxy,&canvasarr[frame],sizeof(canvas));
+                    }
+                }
+                if (input & KEY_L && closePopup == false && clearPopup == false && savePopup == false && errorPopup == false)
+                {
+                    writeToArray(posxy,&canvasarray[frame]);
+                    if(frame>0)
+                        frame--;
+                    variableReset();
+                    writeToScreen(posxy,&canvasarray[frame]);
+//                    memcpy(posxy,&canvasarr[frame],sizeof(canvas));
+                }
+                //Enable show last frame
+                if (input & KEY_Y && closePopup == false && clearPopup == false && savePopup == false) 
+                {
+                    showLastFrame = !showLastFrame;
+                }
+                if (input & KEY_X && closePopup == false && clearPopup == false && savePopup == false) 
+                {
+                    frame=0;
+                    mode = 2;
+                }
 		//Press DOWN to go back to app menu
 		if (input & KEY_DOWN && closePopup == false && clearPopup == false && savePopup == false) closePopup = true;
 
@@ -184,12 +267,16 @@ void app()
 			variableReset();
 			rendered = 0;
 		}
-
+                if (errorPopup)
+		{
+			if ((((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)) errorPopup = false; //App about, only close button
+		}
 		//If you tap No
 		if ((((posX >= 167 && posX <= 257) && (posY >= 151 && posY <= 179)) || input & KEY_B) && (closePopup == true || clearPopup == true))
 		{
 			closePopup = false;
 			clearPopup = false;
+                        errorPopup = false;
 		}
 
 		//Save drawing to sdcard
@@ -203,7 +290,14 @@ void app()
 		if (savePopup && (((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)) savePopup = false;
                 oldposX=posX;
                 oldposY=posY;
-	}
+	} else if(mode == 2){
+            if(input & KEY_B){ mode = 1; }
+            if(input & KEY_DOWN && framepersecond > 0){framepersecond--;} 
+            if(input & KEY_UP && framepersecond < 24){framepersecond++;} 
+            if(input & KEY_L ) frame=0;
+            if(input & KEY_Y ) saveGIF=1;
+                
+        }
 }
 
 
@@ -215,11 +309,27 @@ void printGUI()
 		if (rendered != 2)
 		{
 			guiTopPaint();
-			rendered++;
+			rendered++; 
 		}
-		guiBottomPaint(color, cTable, posxy);
+		guiBottomPaint(color, cTable, posxy,frame>0 ? &canvasarray[frame-1] : NULL);
 	}
-	else //menu
+        else if (mode == 2)
+        {
+            if (rendered != 2)
+            {
+                guiTopPaint();
+                rendered++;
+            }
+            if(frameCount < framepersecond){
+                guiBottomPaintAnimation(cTable, frame>0 ? &canvasarray[frame-1] : NULL,frame,framepersecond);
+                frameCount++;
+            } else {
+                frameCount=0;
+                if(frame<canvassize) frame++;
+                else frameCount=fps+1;
+            }
+	}
+        else //menu
 	{
 		if (rendered != 2)
 		{
@@ -239,7 +349,8 @@ void printGUI()
 	else if (debugPopup) guiPopup("DEBUG", "Do you want to enable debug features,", "such as FPS counter and other few things?", "(You can deactivate this later)", "Enable (A)", "Disable (B)", false);
 	else if (aboutPopup) guiPopup("ABOUT", "App: 3DS Paint", "Dev: AlbertoSONIC (albertosonic.com)", "Version: 2.0", "Close (A)", "", true);
 	else if (closePopup) guiPopup("EXIT", "Are you sure that you want to exit?", " ", " ", "Yes (A)", "No (B)", false);
+        else if (errorPopup) guiPopup("ERROR", "Shit happens", " ", " ", "Yes (A)", "No (B)", true);
 
 	//Debug
-	if (debug) guiDebug(mode, state, color, rendered, sound, printFPS, posX, posY);
+	if (debug) guiDebug(mode, state, color, rendered, sound, printFPS, posX, posY,frame,canvassize);
 }

@@ -9,6 +9,7 @@
 #include "input.h"
 #include "rendering.h"
 #include "mem.h"
+#include "gif.h"
 
 //FPS Counter
 u64 tickOld;
@@ -67,6 +68,17 @@ int main()
 			count = 1;
 			save = 0;
 		}
+                if(saveGIF==1){
+                    GifFileType* gif;
+                    ColorMapObject *GIFcmap;
+                    u32 timestamp = (u32)(svcGetSystemTick() / 446872);
+                    char file[256];
+                    snprintf(file, 256, "/3dspaint_motion_%08d.gif", timestamp);
+                    gif = initGIF(cTable,GIFcmap,file);
+                    save_GIF(canvasarray,canvassize,gif,GIFcmap);
+                    closeGIF(gif);
+                    saveGIF = 0;
+                }
 
 		if (count)
 			screenWait--;
