@@ -21,6 +21,7 @@ extern int mode;
 extern int save;
 extern int saveGIF;
 extern int printFPS;
+extern int framepersecond;
 extern int rendered;
 extern int sound;
 extern int frame;

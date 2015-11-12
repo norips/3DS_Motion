@@ -50,6 +50,14 @@ void save_GIF(canvas* canvasarray,int canvassize,GifFileType* GIFfile,ColorMapOb
         for (int j = 0; j < canvasarray[i].size; j++){
             frametempo[canvasarray[i].point[j].x][canvasarray[i].point[j].y]=canvasarray[i].point[j].color;
         }
+	static unsigned char ExtStr[4] = { 0x04, 0x00, 0x00, 0xff };
+	ExtStr[0] = (false) ? 0x06 : 0x04;
+	ExtStr[1] = ((int)(100/framepersecond)) % 256;
+	ExtStr[2] = ((int)(100/framepersecond)) / 256;
+ 
+	/* Dump graphics control block. */
+	EGifPutExtension(GIFfile, GRAPHICS_EXT_FUNC_CODE, 4, ExtStr);
+	
         if(EGifPutImageDesc(GIFfile, 0, 0, BOTTOM_WIDTH, BOTTOM_HEIGHT, 0, GIFcmap)==GIF_ERROR){
             errorPopup = true;
             mode = 1;
