@@ -8,3 +8,11 @@ font_s fontDefault =
 	16,
 	(u8[]){0xFF,0xFF,0xFF}
 };
+font_s fontBlack =
+{
+	font1Data,
+	font1Desc,
+	16,
+	(u8[]){0x00,0x00,0x00}
+};
+

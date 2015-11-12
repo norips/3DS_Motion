@@ -31,7 +31,7 @@ bool aboutPopup = false;
 bool closePopup = false;
 bool errorPopup = false;
 //Debug mode, ON or OFF:
-bool debug = true;
+bool debug = false;
 //Show last frame
 bool showLastFrame = false;
 //Needed to print pixels
@@ -244,6 +244,7 @@ void app()
                 {
                     frame=0;
                     mode = 2;
+                    rendered = 0;
                 }
 		//Press DOWN to go back to app menu
 		if (input & KEY_DOWN && closePopup == false && clearPopup == false && savePopup == false) closePopup = true;
@@ -289,7 +290,7 @@ void app()
                 oldposY=posY;
 	} else if(mode == 2){
             //Exit
-            if(input & KEY_B){ mode = 1; }
+            if(input & KEY_B){ mode = 1; rendered = 0; }
             //Lower fps
             if(input & KEY_DOWN && framepersecond > 0){framepersecond--;} 
             //Faster fps
@@ -297,7 +298,8 @@ void app()
             //Start
             if(input & KEY_L ) frame=0;
             //Export
-            if(input & KEY_Y ) saveGIF=1;
+            if(input & KEY_SELECT ){ saveGIF=1; savePopup = true;}
+            if (savePopup && (((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)) savePopup = false;
                 
         }
 }
@@ -308,21 +310,23 @@ void printGUI()
 	//Prints the GUI depending on the active mode
 	if (mode == 1) //paint
 	{
-		if (rendered != 2)
-		{
-			guiTopPaint();
-			rendered++; 
-		}
-		guiBottomPaint(color, cTable, posxy,frame>0 ? &canvasarray[frame-1] : NULL);
+            guiFrame();
+            if (rendered != 2)
+            {
+                    guiTopPaint();
+                    rendered++; 
+            }
+            guiBottomPaint(color, cTable, posxy,frame>0 ? &canvasarray[frame-1] : NULL);
 	}
         else if (mode == 2)
         {
+            guiFrame();
             if (rendered != 2)
             {
-                guiTopPaint();
+                guiTopAnimation();
                 rendered++;
             }
-            if(frameCount < framepersecond){
+            if(frameCount < printFPS/framepersecond){
                 guiBottomPaintAnimation(cTable, frame>0 ? &canvasarray[frame-1] : NULL,frame,framepersecond);
                 frameCount++;
             } else {
@@ -343,7 +347,6 @@ void printGUI()
 
 	//Prints clock
 	guiClock();
-
 	//Popups
 	if (exitPopup) guiPopup("EXIT", "Are you sure that you want to exit", "3DS Paint?", " ", "Yes (A)", "No (B)", false);
 	else if (clearPopup) guiPopup("CLEAR", "Are you sure that you want to clear", "everything?", "(This action is irreversible)", "Yes (A)", "No (B)", false);

@@ -59,7 +59,7 @@ int main()
 		{
 			u32 timestamp = (u32)(svcGetSystemTick() / 446872);
 			char file[256];
-			snprintf(file, 256, "/3dspaint_drawing_%08d.bmp", timestamp);
+			snprintf(file, 256, "./3dspaint_drawing_%08d.bmp", timestamp);
 			if (saveDrawing(file))
 				paddle1R = 0;
 			else
@@ -73,7 +73,7 @@ int main()
                     ColorMapObject *GIFcmap;
                     u32 timestamp = (u32)(svcGetSystemTick() / 446872);
                     char file[256];
-                    snprintf(file, 256, "/3dspaint_motion_%08d.gif", timestamp);
+                    snprintf(file, 256, "./3dspaint_motion_%08d.gif", timestamp);
                     gif = initGIF(cTable,GIFcmap,file);
                     save_GIF(canvasarray,canvassize,gif,GIFcmap);
                     closeGIF(gif);

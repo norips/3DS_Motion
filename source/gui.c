@@ -74,6 +74,51 @@ void guiTopPaint()
 	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 265, 248 - fontDefault.height * 11);
 }
 
+void guiTopAnimation()
+{
+	//Prints the brown background!
+	drawFillRect(0, 0, 399, 239, 255, 185, 15, screenTopLeft);
+	//Prints the DPAD
+	drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopLeft);
+	drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopLeft);
+	drawFillRect(0, 129, 17, 134, 242, 204, 146, screenTopLeft);
+	drawFillRect(42, 69, 48, 106, 242, 204, 146, screenTopLeft);
+	drawFillRect(72, 129, 107, 134, 242, 204, 146, screenTopLeft);
+	drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopLeft);
+	//Blue rect
+	drawFillRect(254, 37, 399, 100, 51, 153, 255, screenTopLeft);
+	//Green rect (save)
+	drawFillRect(257, 138, 399, 168, 69, 206, 48, screenTopLeft);
+
+
+	//Text
+	sprintf(buffer, "More fps");
+	gfxDrawText(GFX_TOP, GFX_RIGHT, NULL, buffer, 27, 240 - fontDefault.height * 3);
+
+	sprintf(buffer, "3DS Paint");
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 265, 230 - fontDefault.height * 3);
+
+	sprintf(buffer, "Coded by");
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 265, 240 - fontDefault.height * 5);
+
+	sprintf(buffer, "AlbertoSONIC and norips");
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 265, 240 - fontDefault.height * 6);
+
+	sprintf(buffer, "Less fps");
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 27, 240 - fontDefault.height * 14);
+
+	sprintf(buffer, "CHANGE COLOR");
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 130, 235 - fontDefault.height * 8);
+
+	sprintf(buffer, "SELECT ERASER");
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 130, 235 - fontDefault.height * 9);
+
+	sprintf(buffer, "Press SELECT to export");
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 265, 245 - fontDefault.height * 10);
+
+	sprintf(buffer, "your anim to SDCARD");
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 265, 248 - fontDefault.height * 11);
+}
 
 void guiTopMenu()
 {
@@ -105,10 +150,6 @@ void guiBottomPaintAnimation(int cTable[][ctablesize],canvas* canvasarray,int fr
     //Prints a white screen!
     char buffer[256];
     drawFillRect(0, 0, 320, 240, 255, 255, 255, screenBottom);
-    sprintf(buffer,"Frame = %03d",frame);
-    gfxDrawText(GFX_BOTTOM,GFX_LEFT,NULL,buffer,30,245- fontDefault.height*3);
-    sprintf(buffer,"FPS = %03d",fps);
-    gfxDrawText(GFX_BOTTOM,GFX_LEFT,NULL,buffer,30,240- fontDefault.height*5);
     if(canvasarray!=NULL)
     {
         int size=canvasarray->size;
@@ -122,6 +163,8 @@ void guiBottomPaintAnimation(int cTable[][ctablesize],canvas* canvasarray,int fr
                         screenBottom);
         }
     }
+    sprintf(buffer,"FPS = %03d",fps);
+    gfxDrawText(GFX_BOTTOM,GFX_LEFT,&fontBlack,buffer,5,235- fontDefault.height*2);
 }
 void guiBottomPaint(int color, int cTable[][ctablesize], char posxy[][posxysize],canvas* canvasarray)
 {
@@ -223,6 +266,13 @@ void guiClock()
 	sprintf(buffer, "%.2llu:%.2llu:%.2llu", dayTime / SECONDS_IN_HOUR, (dayTime % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE, dayTime % SECONDS_IN_MINUTE);
 
 	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 300, 248 - fontDefault.height * 14);
+}
+
+void guiFrame()
+{
+	drawFillRect(276, 169, 399, 200, 0, 204, 146, screenTopLeft);
+        sprintf(buffer,"Frame = %03d/%03d",frame,canvassize);
+        gfxDrawText(GFX_TOP, GFX_LEFT ,NULL, buffer, 300, 65 - fontDefault.height );
 }
 
 void guiPopup(char* title, char* line1, char* line2, char* line3, char* button1, char* button2, bool closeonly)
