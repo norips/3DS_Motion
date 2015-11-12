@@ -2,6 +2,10 @@
 Thumbs.db
 ehthumbs.db
 
+#Netbeans
+build/*
+nbproject/
+
 # Folder config file
 Desktop.ini
 
