@@ -4,6 +4,7 @@ before_install:
 - export DEVKITPRO=/home/travis/devkitPro
 - export DEVKITARM=${DEVKITPRO}/devkitARM
 - export CTRULIB=${DEVKITPRO}/libctru
+- export PORTLIBS=${DEVKITPRO}/portlibs/armv6k
 - sh .travis-deps.sh
 script:
 - make clean
