@@ -6,7 +6,7 @@ set -x
 # Get latest ctrulib and overwrite bundled one
 git clone https://github.com/smealum/ctrulib.git
 cd ctrulib/libctru && make ; cd -
-sudo cp -rf ctrulib/libctru/ ${DEVKITPRO}
+cp -rf ctrulib/libctru/ ${DEVKITPRO}
 
 # Get giflib and install
 git clone https://github.com/norips/3ds_portlibs.git
