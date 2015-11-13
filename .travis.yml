@@ -1,11 +1,17 @@
+os:
+  - linux
 language: cpp
 sudo: required
 before_install:
-- export DEVKITPRO=/home/travis/devkitPro
-- export DEVKITARM=${DEVKITPRO}/devkitARM
-- export CTRULIB=${DEVKITPRO}/libctru
-- export PORTLIBS=${DEVKITPRO}/portlibs/armv6k
-- sh .travis-deps.sh
+  - export CC=arm-none-eabi-gcc
+  - export CXX=arm-none-eabi-g++
+  - export DEVKITPRO=${HOME}/devkitPro
+  - export DEVKITARM=${DEVKITPRO}/devkitARM
+  - export PORTLIBS=${DEVKITPRO}/portlibs/armv6k
+  - wget http://sourceforge.net/projects/devkitpro/files/Automated%20Installer/devkitARMupdate.pl
+  - perl devkitARMupdate.pl
+  - make giflib
+  - make install
 script:
 - make clean
 - make
