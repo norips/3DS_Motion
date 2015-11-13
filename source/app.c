@@ -56,6 +56,24 @@ int cTable[9][3]={
         { 96, 96, 96 }     //8 - Gray
 };
 
+void colorSelection(int posX,int posY, int* color){
+    if ((posX >= 15 && posX <= 50) && (posY >= 3 && posY <= 31)) *color = 0;
+    
+    if ((posX >= 84 && posX <= 106) && (posY >= 6 && posY <= 27)) *color = 1;
+    
+    if ((posX >= 118 && posX <= 140) && (posY >= 6 && posY <= 27)) *color = 2;
+    
+    if ((posX >= 152 && posX <= 174) && (posY >= 6 && posY <= 27)) *color = 3;
+    
+    if ((posX >= 186 && posX <= 208) && (posY >= 6 && posY <= 27)) *color = 4;
+    
+    if ((posX >= 220 && posX <= 242) && (posY >= 6 && posY <= 27)) *color = 5;
+    
+    if ((posX >= 254 && posX <= 276) && (posY >= 6 && posY <= 27)) *color = 6;
+    
+    if ((posX >= 288 && posX <= 310) && (posY >= 6 && posY <= 27)) *color = 7;
+}
+
 bool writeToArray(char posxy[320][240],canvas* arrayCanvas){
     int i=0;
     arrayCanvas->point=malloc(sizeof(point)*MALLOC_SIZE);
@@ -198,7 +216,8 @@ void app()
 				posxy[posX - 2][posY] = color;
 			}
 		}
-
+                
+                colorSelection(posX,posY,&color);
 		//Changes color/Eraser)
 		if (input & KEY_LEFT && color > 0)
 		{

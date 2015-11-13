@@ -16,7 +16,7 @@ void printGUI();
 void variableReset();
 bool writeToArray(char posxy[320][240],canvas* arrayCanvas);
 bool writeToScreen(char posxy[320][240],const canvas* arrayCanvas);
-
+void colorSelection(int posX,int posY,int*);
 extern int mode;
 extern int save;
 extern int saveGIF;
