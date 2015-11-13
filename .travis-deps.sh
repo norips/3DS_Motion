@@ -12,8 +12,7 @@ cd ctrulib/libctru && make ; cd -
 sudo cp -rf ctrulib/libctru/ ${DEVKITPRO}
 
 # Get giflib and install
-wget http://sourceforge.net/projects/giflib/files/giflib-5.1.1.tar.bz2/download
-tar -xvf download
-cd giflib-5.1.1
-./configure --prefix=${PORTLIBS} --host=arm-none-eabi --disable-shared --enable-static
-make && sudo make install
+mkdir portlibs && cd portlibs
+git clone https://github.com/norips/3ds_portlibs.git
+wget -O giflib-5.1.1.tar.bz2 http://sourceforge.net/projects/giflib/files/giflib-5.1.1.tar.bz2/download
+make giflib && make install
