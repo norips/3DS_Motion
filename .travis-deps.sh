@@ -13,7 +13,7 @@ sudo cp -rf ctrulib/libctru/ ${DEVKITPRO}
 
 # Get giflib and install
 wget http://sourceforge.net/projects/giflib/files/giflib-5.1.1.tar.bz2/download
-tar -xvf giflib-5.1.1.tar.bz2
+tar -xvf download
 cd giflib-5.1.1
 ./configure --prefix=${PORTLIBS} --host=arm-none-eabi --disable-shared --enable-static
 make && make install
