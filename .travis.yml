@@ -8,6 +8,8 @@ before_install:
   - export DEVKITPRO=${HOME}/devkitPro
   - export DEVKITARM=${DEVKITPRO}/devkitARM
   - export PORTLIBS=${DEVKITPRO}/portlibs/armv6k
+  - wget http://sourceforge.net/projects/devkitpro/files/Automated%20Installer/devkitARMupdate.pl
+  - perl devkitARMupdate.pl
   - sh .travis-deps.sh
   
 script:
