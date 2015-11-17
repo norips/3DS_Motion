@@ -21,7 +21,7 @@ Control :
   * On screen instruction
   * L - Previous frame
   * R - Next frame
-  * Select - Enable show last frame
+  * Y - Enable show last frame
   * X - Go to preview mode
   * B - Delete frame
 
