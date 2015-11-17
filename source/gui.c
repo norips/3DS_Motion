@@ -271,7 +271,7 @@ void guiClock()
 void guiFrame()
 {
 	drawFillRect(276, 169, 399, 200, 0, 204, 146, screenTopLeft);
-        sprintf(buffer,"Frame = %03d/%03d",frame,canvassize);
+        sprintf(buffer,"Frame = %03d/%03d",frame+1,canvassize+1);
         gfxDrawText(GFX_TOP, GFX_LEFT ,NULL, buffer, 300, 65 - fontDefault.height );
 }
 

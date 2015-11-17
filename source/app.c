@@ -232,11 +232,14 @@ void app()
                 {
                     if(frame+1>canvassize){
                         canvassize++;
-                        if((canvasarray=realloc(canvasarray,sizeof(canvas)*(canvassize+1)))!=NULL){} 
-                        else { errorPopup = true; }
-                        writeToArray(posxy,&canvasarray[frame]);
-                        frame++;
-                        variableReset();
+                        if((canvasarray=realloc(canvasarray,sizeof(canvas)*(canvassize+1)))==NULL){ errorPopup = true; } 
+                        else 
+                        { 
+                            writeToArray(posxy,&canvasarray[frame]);
+                            frame++;
+                            variableReset();
+                        }
+                        
                     } else {
                         writeToArray(posxy,&canvasarray[frame]);
                         frame++;
@@ -264,6 +267,20 @@ void app()
                     frame=0;
                     mode = 2;
                     rendered = 0;
+                }
+                //Remove frame
+                if (input & KEY_B && closePopup == false && clearPopup == false && savePopup == false) 
+                {
+                    if(canvassize>0)
+                    {
+                        free(canvasarray[frame].point);
+                        memmove(&canvasarray[frame],&canvasarray[frame+1],(canvassize-frame)*sizeof(canvas));
+                        canvassize--;
+                        if(frame>0) frame--;
+                        canvasarray = realloc(canvasarray,sizeof(canvas)*(canvassize+1));
+                        variableReset();
+                        writeToScreen(posxy,&canvasarray[frame]);
+                    }
                 }
 		//Press DOWN to go back to app menu
 		if (input & KEY_DOWN && closePopup == false && clearPopup == false && savePopup == false) closePopup = true;
@@ -309,7 +326,7 @@ void app()
                 oldposY=posY;
 	} else if(mode == 2){
             //Exit
-            if(input & KEY_B){ mode = 1; rendered = 0; }
+            if(input & KEY_B){ mode = 1; rendered = 0; input=0; variableReset();}
             //Lower fps
             if(input & KEY_DOWN && framepersecond > 0){framepersecond--;} 
             //Faster fps
