@@ -247,7 +247,7 @@ void app()
                         writeToScreen(posxy,&canvasarray[frame]);
                     }
                 }
-                //Before frame
+                //Previous frame
                 if (input & KEY_L && closePopup == false && clearPopup == false && savePopup == false && errorPopup == false)
                 {
                     writeToArray(posxy,&canvasarray[frame]);

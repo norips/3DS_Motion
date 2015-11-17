@@ -32,9 +32,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 
-APP_TITLE       := 3DS Paint
+APP_TITLE       := 3DS Motion
 APP_DESCRIPTION := It's time to unleash your painting power!
-APP_AUTHOR      := AlbertoSONIC
+APP_AUTHOR      := AlbertoSONIC & norips
 
 #---------------------------------------------------------------------------------
 # options for code generation

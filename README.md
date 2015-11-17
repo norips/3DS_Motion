@@ -1,4 +1,4 @@
-3DS Motion [![Build Status](https://travis-ci.org/norips/3DS_Paint.svg?branch=master)](https://travis-ci.org/norips/3DS_Paint)
+3DS Motion [![Build Status](https://travis-ci.org/norips/3DS_Motion.svg)](https://travis-ci.org/norips/3DS_Motion)
 ==========
 
 > Today i introduce you to my latest 3DS Homebrew: 3DS Paint! With this app you can draw anything you want, with 7 colors and a rubber! You can find some instructions on the 3DS's top screen!
@@ -43,7 +43,7 @@ Bugs:
 Downloads:
 ===============
 
-https://github.com/norips/3DS_Paint/releases
+https://github.com/norips/3DS_Motion/releases
 
 
 Credits:
