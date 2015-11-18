@@ -111,7 +111,6 @@ bool writeToScreen(char screen[320][240],const canvas* arrayCanvas){
 //Variable reset
 void variableReset()
 {
-	color = 0;
 	for (y = 34; y < 240; y++)
 	{
 		for (x = 0; x < 320; x++)
@@ -216,8 +215,9 @@ void app()
 				posxy[posX - 2][posY] = color;
 			}
 		}
-                
+                //Select color using touch screen
                 colorSelection(posX,posY,&color);
+                
 		//Changes color/Eraser)
 		if (input & KEY_LEFT && color > 0)
 		{
@@ -250,16 +250,26 @@ void app()
                 //Previous frame
                 if (input & KEY_L && closePopup == false && clearPopup == false && savePopup == false && errorPopup == false)
                 {
-                    writeToArray(posxy,&canvasarray[frame]);
                     if(frame>0)
+                    {
+                        writeToArray(posxy,&canvasarray[frame]);
                         frame--;
-                    variableReset();
-                    writeToScreen(posxy,&canvasarray[frame]);
+                        variableReset();
+                        writeToScreen(posxy,&canvasarray[frame]);
+                    }
                 }
                 //Enable show last frame
                 if (input & KEY_Y && closePopup == false && clearPopup == false && savePopup == false) 
                 {
                     showLastFrame = !showLastFrame;
+                }
+                //Copy last frame to the current frame
+                if (input & KEY_START && closePopup == false && clearPopup == false && savePopup == false) 
+                {
+                    if(frame>0)
+                    {
+                        writeToScreen(posxy,&canvasarray[frame-1]);
+                    }
                 }
                 //Show animation
                 if (input & KEY_X && closePopup == false && clearPopup == false && savePopup == false) 
